@@ -1,0 +1,13 @@
+name: SVG
+channels:
+  - pytorch
+  - nvidia
+dependencies:
+  - python == 3.10
+  - pytorch >= 1.13
+  - torchvision
+  - pytorch-cuda=11.7
+  - pip:
+    - timm
+    - diffusers
+    - accelerate

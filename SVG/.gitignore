@@ -1,0 +1,80 @@
+# ==============================================
+# General development environment ignore rules (keep your original settings)
+# ==============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.installed.cfg
+*.egg
+# ... (other original Python-related rules preserved)
+
+# ==============================================
+# Deep learning / large file ignore rules (new core section)
+# ==============================================
+
+# Large model files in all subdirectories (recursive)
+**/*.pt           # PyTorch model weights
+**/*.bin          # General binary model weights
+**/*.safetensors  # Safe tensor format
+**/*.h5           # HDF5 format
+**/*.onnx         # ONNX models
+**/*.ckpt         # Checkpoint files
+**/*.pb
+**/*.pth
+**/taming-transformers
+**/exps
+
+# Media files in all subdirectories (recursive)
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.gif
+**/*.bmp
+**/*.tiff
+**/*.mp4
+**/*.avi
+**/*.mov
+
+# Temporary training artifacts
+**/checkpoints/
+**/logs/
+**/runs/
+**/outputs/
+**/results/
+**/samples/
+**/generations/
+**/exp/
+**/weights/
+exps
+
+# Dataset-related large files
+**/*.zip
+**/*.tar
+**/*.gz
+**/*.npz
+**/*.npy
+
+# IDE and system files (enhanced)
+**/.DS_Store
+**/Thumbs.db
+**/.ipynb_checkpoints/
+**/.vscode/
+**/.idea/
+
+**/*noise*
+**/*ckpt*
+**/*img*
+**/pretrained_models
+**/*latents*
+**/*submmit*
+
+# ==============================================
+# Exception rules (whitelist)
+# ==============================================
+# Add exceptions here if specific large files should be kept:
+# !project/assets/example.png

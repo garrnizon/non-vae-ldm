@@ -1,0 +1,27 @@
+# Model configuration
+model:
+  target: autoencoder.ldm.models.dino_decoder.DinoDecoder
+  params:    
+    ckpt_path: pretrained/autoencoder/svg_autoencoder_dinov3s16p_vit-s_epoch40.ckpt
+    is_train: false
+    only_decoder: true 
+    embed_dim: 32
+    ddconfig:
+      double_z: true
+      z_channels: 392
+      resolution: 256
+      in_channels: 3
+      out_ch: 3
+      ch: 128
+      ch_mult:
+      - 1
+      - 1
+      - 2
+      - 2
+      - 4
+      num_res_blocks: 2
+      attn_resolutions:
+      - 16
+      dropout: 0.0
+    dinoconfig: null
+    lossconfig: null

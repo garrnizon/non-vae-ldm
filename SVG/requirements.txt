@@ -1,0 +1,11 @@
+torch==2.7.1
+torchvision==0.22.1
+omegaconf==2.3.0
+pytorch-lightning==2.4.0
+numpy>=1.24.0
+timm==0.9.16
+einops
+opencv-python
+albumentations
+scikit-image
+tensorboard
