@@ -29,7 +29,7 @@ sys.path.append('SVG/autoencoder')
 class Config:
     """Configuration for SVG feature visualization"""
     # Model settings
-    DINOV3_CHECKPOINT = 'dinov3_vits16plus_pretrain_lvd1689m.pth'
+    DINOV3_CHECKPOINT = 'data/dinov3_vits16plus_pretrain_lvd1689m-4057cbaa.pth'
     DINOV3_REPO_PATH = 'dinov3'  # Path to cloned DINOv3 repository
     
     # Dataset settings
@@ -42,7 +42,7 @@ class Config:
     
     # t-SNE settings
     TSNE_PERPLEXITY = 30
-    TSNE_N_ITER = 1000
+    TSNE_MAX_ITER = 1000
     TSNE_RANDOM_STATE = 42
     
     # Visualization settings
@@ -315,7 +315,7 @@ class FeatureVisualizer:
         tsne = TSNE(
             n_components=2,
             perplexity=min(self.config.TSNE_PERPLEXITY, features.shape[0] - 1),
-            n_iter=self.config.TSNE_N_ITER,
+            max_iter=self.config.TSNE_MAX_ITER,
             random_state=self.config.TSNE_RANDOM_STATE,
             verbose=1
         )

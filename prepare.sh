@@ -6,4 +6,10 @@ rm -rf dinov3/.git
 git clone https://github.com/shiml20/SVG.git
 rm -rf SVG/.git
 
-python utils/load.py
+mkdir data
+python3 utils/load.py
+
+python3 -m venv venv_vis
+venv_vis/bin/pip install -r visualizations/requirements.txt
+
+
