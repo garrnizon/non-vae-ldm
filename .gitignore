@@ -1,6 +1,7 @@
 data/
 venv*
 vis
+other/
 
 # my above
 # Byte-compiled / optimized / DLL files
