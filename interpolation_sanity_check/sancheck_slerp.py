@@ -1,4 +1,4 @@
-import json
+import yaml
 import os
 import sys
 
@@ -10,8 +10,8 @@ from tqdm import trange
 import time
 
 
-with open("configs/base.json", "r") as f:
-    cfg = json.load(f)
+with open("configs/interpolation_sanity_check_base.yaml", "r") as f:
+    cfg = yaml.safe_load(f)
 
 interp_steps  = cfg["interpolation_steps"]
 slerp_dot_thr = cfg["slerp_dot_thr"]
