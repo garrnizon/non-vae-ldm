@@ -141,6 +141,7 @@ class RectifiedFlow(torch.nn.Module):
 
         t_seq, dt_seq = prepare_t_seq(sample_steps, device, timestep_shift)
         loop_range = tqdm(range(sample_steps), desc="Sampling") if progress else range(sample_steps)
+        norms = []
 
         def fn(z, t, cond):
             """Forward through the model."""
@@ -190,6 +191,9 @@ class RectifiedFlow(torch.nn.Module):
         # Integrators
         def euler_step(z, i):
             t = torch.full((b,), t_seq[i], device=device)
+            # l2 norm over all dims but fist - batch dim.
+            norm = torch.mean(z ** 2, dim=list(range(1, len(z.shape))))
+            norms.append(norm)
             vc = fn_v(z, t, step_i=i)
             return z + dt_seq[i].to(z.device) * vc
 
@@ -202,6 +206,8 @@ class RectifiedFlow(torch.nn.Module):
             return z + 0.5 * dt_seq[i].to(z.device) * (vc + vc_next)
 
         # Sampling loop
+        # norm = torch.mean(z ** 2, dim=list(range(1, len(z.shape))))
+        # norms.append(norm)
         for i in loop_range:
             os.environ["cur_step"] = f"{i:03d}"
             if mode == "euler":
@@ -211,4 +217,6 @@ class RectifiedFlow(torch.nn.Module):
             else:
                 raise NotImplementedError(f"Unsupported mode: {mode}")
 
-        return z
+
+
+        return z, norms
