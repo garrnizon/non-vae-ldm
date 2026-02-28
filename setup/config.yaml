@@ -1,4 +1,4 @@
-data_dir: ./tdata
+data_dir: ./data
 yadisk:
 - https://disk.yandex.ru/d/4o0wqiQaJ45Jyw
 - https://disk.yandex.ru/d/VRMe3QHC_zCJpA

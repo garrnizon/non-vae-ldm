@@ -12,3 +12,7 @@ torch==2.10.0
 torchmetrics==1.8.2
 torchvision==0.25.0
 tqdm==4.67.3
+# for jupyter
+ipykernel==7.2.0
+jupyter_client==8.8.0
+jupyter_core==5.9.1
