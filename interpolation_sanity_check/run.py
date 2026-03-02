@@ -241,6 +241,7 @@ def run_pipeline(
         mode=mode,
         timestep_shift=timestep_shift,
         cfg_mode=cfg_mode,
+        experiment=exp_name
     )
 
     plot_norms(norms, save_path)

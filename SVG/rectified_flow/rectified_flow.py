@@ -119,6 +119,10 @@ class RectifiedFlow(torch.nn.Module):
         timestep_shift=1.0,
         cfg_mode="constant",
         cfg_interval=2,
+        experiment : str | None = None,
+        steps : list[int] = [],
+        labels :list[int] = [],
+        return_history : bool = False
     ):
         """
         Sampling function with flexible CFG scheduling and integrators.
@@ -142,6 +146,7 @@ class RectifiedFlow(torch.nn.Module):
         t_seq, dt_seq = prepare_t_seq(sample_steps, device, timestep_shift)
         loop_range = tqdm(range(sample_steps), desc="Sampling") if progress else range(sample_steps)
         norms = []
+        history = []
 
         def fn(z, t, cond):
             """Forward through the model."""
@@ -154,7 +159,7 @@ class RectifiedFlow(torch.nn.Module):
                 vc, _ = vc.chunk(2, dim=2)
             return vc
 
-        def fn_v(z, t, step_i=None):
+        def fn_v(z, t, step_i=None, cond=cond):
             """Compute velocity field with classifier-free guidance."""
             vc = fn(z, t, cond)
             if null_cond is None:
@@ -189,12 +194,15 @@ class RectifiedFlow(torch.nn.Module):
             return vu + cur_cfg * (vc - vu)
 
         # Integrators
-        def euler_step(z, i):
+        def euler_step(z, i, cond=cond):
+            if return_history:
+                history.append(z.clone())
+            
             t = torch.full((b,), t_seq[i], device=device)
             # l2 norm over all dims but fist - batch dim.
             norm = torch.mean(z ** 2, dim=list(range(1, len(z.shape))))
             norms.append(norm)
-            vc = fn_v(z, t, step_i=i)
+            vc = fn_v(z, t, step_i=i, cond=cond)
             return z + dt_seq[i].to(z.device) * vc
 
         def heun_step(z, i):
@@ -206,17 +214,47 @@ class RectifiedFlow(torch.nn.Module):
             return z + 0.5 * dt_seq[i].to(z.device) * (vc + vc_next)
 
         # Sampling loop
-        # norm = torch.mean(z ** 2, dim=list(range(1, len(z.shape))))
-        # norms.append(norm)
-        for i in loop_range:
-            os.environ["cur_step"] = f"{i:03d}"
-            if mode == "euler":
-                z = euler_step(z, i)
-            elif mode == "heun":
-                z = heun_step(z, i)
-            else:
-                raise NotImplementedError(f"Unsupported mode: {mode}")
 
+        if experiment.startswith('separation_spot'):
+            assert  0 < len(labels) == len(steps), f'for {experiment}: len(steps={steps}) must me > 0 and equal to len(labels={labels}), got'
+            assert sum(steps) == sample_steps, f'for {experiment}: sum(steps={steps}) != sample_steps={sample_steps}'
+            
+            offset = 0
+            for sample_steps, label in zip(steps, labels):
+                loop_range = tqdm(range(offset, offset + sample_steps), desc="Sampling") if progress else range(offset, offset + sample_steps)
+                
+                for i in loop_range:
+                    os.environ["cur_step"] = f"{i:03d}"
+                    if mode == "euler":
+                        z = euler_step(z, i, label)
+                    elif mode == "heun":
+                        z = heun_step(z, i)
+                    else:
+                        raise NotImplementedError(f"Unsupported mode: {mode}")
 
+                offset += sample_steps
 
-        return z, norms
+            
+        else:
+
+            for i in loop_range:
+                os.environ["cur_step"] = f"{i:03d}"
+                if mode == "euler":
+                    z = euler_step(z, i)
+                elif mode == "heun":
+                    z = heun_step(z, i)
+                else:
+                    raise NotImplementedError(f"Unsupported mode: {mode}")
+
+        to_return = [z]
+
+        if experiment.startswith('interpolation_sanity_check_norms'):
+            to_return.append(norms)
+        
+        if return_history:
+            to_return.append(history)
+
+        if len(to_return) == 1:
+            return to_return[0]
+        else:
+            return to_return

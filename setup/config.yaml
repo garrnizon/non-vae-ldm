@@ -6,3 +6,7 @@ yadisk:
 - https://disk.yandex.ru/d/BxK8eHliLpo-Rw
 - https://disk.yandex.ru/d/ndi89RTeOmxhwA
 
+imagenet_classes:
+  - n02123394
+  - n02123597
+

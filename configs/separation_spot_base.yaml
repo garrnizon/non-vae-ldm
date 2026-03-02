@@ -1,0 +1,37 @@
+cuda_device: "6"
+sys_paths:
+  - SVG/
+  - SVG/autoencoder
+
+exp_name: separation_spot_test
+ckpt_path: data/V1-SVG-XL-7000K-256x256.pt
+config_path: configs/svg_xl_pretrained_config.yaml
+stats_path: SVG/dinov3_sp_stats.pt
+save_dir: res
+seed: 1
+num_steps: 25
+cfg_scale: 4
+image_size: 256
+samples_per_row: 4
+class_labels:
+  - 283
+  # - 284
+  # - 285
+  # - 383
+  # - 151
+  # - 152
+  # - 153
+  # - 154
+
+steps:
+  - 24
+  - 1
+labels:
+  - 283
+  - 284
+
+timestep_shift: 0.15
+cfg_mode: constant
+mode: euler
+
+null_class_label: 1000

@@ -1,9 +1,9 @@
-cuda_device: "6"
+cuda_device: "4"
 sys_paths:
   - SVG/
   - SVG/autoencoder
 
-exp_name: interpolation_sanity_check_norms_2
+exp_name: distibution_sampling
 ckpt_path: data/V1-SVG-XL-7000K-256x256.pt
 config_path: configs/svg_xl_pretrained_config.yaml
 stats_path: SVG/dinov3_sp_stats.pt
@@ -25,7 +25,7 @@ class_labels:
 
 interpolation_steps: 10
 slerp_dot_thr: 0.9995
-
+batch_size: 32
 timestep_shift: 0.15
 cfg_mode: constant
 mode: euler
