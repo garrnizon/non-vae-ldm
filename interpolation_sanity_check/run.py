@@ -3,9 +3,10 @@ import json
 import os
 import sys
 
+config_path = sys.argv[1] if len(sys.argv) > 1 else "configs/interpolation_sanity_check_base.yaml"
 
 # === Load config ===
-with open("configs/interpolation_sanity_check_base.yaml", "r") as f:
+with open(config_path, "r") as f:
     cfg = yaml.safe_load(f)
 
 os.environ["CUDA_VISIBLE_DEVICES"] = cfg["cuda_device"]
